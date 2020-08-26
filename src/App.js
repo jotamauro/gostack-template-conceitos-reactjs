@@ -9,21 +9,26 @@ function App() {
     api.get("/repositories").then((response) => {
       setRepositories(response.data);
     });
-  }, [repositories]);
+  }, []);
 
   async function handleAddRepository() {
-    const response = await api.post("/repositories", {
-      title: `Novo Projeto ${Date.now()}`,
-      owner: "José Mauro",
-      techs: ["ADVPL", "Angular"],
+    const response = await api.post("repositories", {
+      title: "Desafio ReactJS",
+      url:
+        "https://github.com/jotamauro/gostack-template-conceitos-reactjs.git",
+      techs: ["React", "TypeScript"],
     });
 
-    const repositorie = response.data;
-    setRepositories([...repositories, repositorie]);
+    setRepositories([...repositories, response.data]);
   }
 
   async function handleRemoveRepository(id) {
     await api.delete(`/repositories/${id}`);
+
+    const newRepositorie = repositories.filter(
+      (repositorie) => repositorie.id !== id
+    );
+    setRepositories(newRepositorie);
   }
 
   return (
@@ -38,7 +43,6 @@ function App() {
           </li>
         ))}
       </ul>
-
       <button onClick={handleAddRepository}>Adicionar</button>
     </div>
   );
